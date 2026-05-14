@@ -12,7 +12,7 @@ A Copilot CLI / Claude Code skill for live, browser-based HTML/SVG visualization
 ## Usage
 
 ```bash
-node canvas.cjs render --topic <topic>
+node scripts/canvas.cjs render --topic <topic>
 ```
 
 Returns JSON `{url, port, topic_dir}`. Open `url` in browser.
@@ -21,8 +21,10 @@ Returns JSON `{url, port, topic_dir}`. Open `url` in browser.
 
 | File | Purpose |
 |------|---------|
-| `canvas.cjs` | Single-file CLI (zero deps) |
+| `scripts/canvas.cjs` | Single-file CLI (zero deps) |
 | `SKILL.md` | Skill capability spec |
+| `references/design-system.md` | Design system (absorbed from taste-skill, adapted for standalone HTML) |
+| `references/svg-animations.md` | SVG/CSS/SMIL animation techniques |
 | `tests/test-render.sh` | Integration test |
 
 ## Install as Copilot CLI skill

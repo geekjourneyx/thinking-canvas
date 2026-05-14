@@ -4,7 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SKILL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-CANVAS="$SKILL_DIR/canvas.cjs"
+CANVAS="$SKILL_DIR/scripts/canvas.cjs"
 
 TMP=$(mktemp -d)
 cleanup() {
