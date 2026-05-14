@@ -5,6 +5,46 @@ These rules apply to every canvas render. Non-negotiable.
 
 ---
 
+## Design Context Protocol
+
+**Before generating any HTML, extract existing design DNA. Generic output is the failure mode.**
+
+Priority order (highest → lowest):
+
+1. **User's codebase** — read `theme.ts`, `colors.ts`, `tokens.css`, `_variables.scss`, key components. Lift exact hex/px values; don't guess.
+2. **Existing product URL** — inspect with browser devtools or Playwright screenshot.
+3. **Brand assets** — logo file, slide templates, marketing materials.
+4. **This design system** (fallback) — when no context exists, apply these rules and tell the user you're starting fresh.
+
+**Verbalize the design system back to the user** before generating HTML:
+> "I found: `#1a1a2e` background, `Söhne` at 400/700, 8px border-radius, 16px base grid. I'll use these."
+
+If nothing exists: state "Building from first principles with zinc palette" and proceed.
+
+---
+
+## Visual Style Guide
+
+Selecting the right design language for the canvas topic. HTML-executable styles only.
+
+| Topic | Style Ref | Visual Language |
+|-------|-----------|-----------------|
+| System architecture / technical | **Fathom** + Müller-Brockmann | Precision grid, data-dense, cool neutrals |
+| Strategy / decision comparison | **Pentagram** | Type hierarchy, 60% whitespace, black+1 accent |
+| Process / workflow narrative | **Takram** | Systems thinking, R&D aesthetic, annotated diagrams |
+| Creative brainstorm / idea explosion | **Build** | Bold editorial, playful weight contrast |
+| UX flows / product design | **Locomotive** | Interactive-first, scroll choreography |
+| Minimalist / deep thinking | **Kenya Hara** | Emptiness as communication, almost no color |
+| Data patterns / exploration | **Stamen** | Cartographic depth, organic patterns, warm palette |
+
+**Mood-driven selection:** Describe the *emotion* of the thinking, not the layout:
+- "This feels like a lab report" → Fathom
+- "This is trying to find the one truth" → Kenya Hara
+- "Ideas are exploding in every direction" → Build or Sagmeister
+- "Architecture is emerging from chaos" → Müller-Brockmann
+
+---
+
 ## Design Dials (Defaults)
 
 | Dial | Default | Range Meaning |
@@ -19,18 +59,38 @@ Adapt to context: architecture diagram → density 6–7; rapid brainstorm → m
 
 ## Typography
 
-**Font stack — load via CDN. Pick ONE pairing per canvas.**
+**Font stack — load via CDN. Pick ONE pairing per canvas. Dual-typeface is the rule: serif (voice/brand) + sans (function/UI).**
 
 ```html
-<!-- Preferred: Satoshi (general purpose) -->
+<!-- Pairing A: General purpose — Satoshi Sans -->
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+
+<!-- Pairing B: Literary / editorial — Instrument Serif + Geist Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- Pairing C: Bold editorial — Bricolage Grotesque (single-family, high expressiveness) -->
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<!-- Pairing D: Narrative / warm — Fraunces (serif) + Work Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
 <!-- Alt: Cabinet Grotesk (expressive, editorial) -->
 <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
 
-<!-- Monospace (data, code, numbers) -->
+<!-- Monospace (data, code, numbers) — always pair with above -->
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 ```
+
+**Pairing selection by topic:**
+
+| Topic | Serif | Sans | Mono |
+|-------|-------|------|------|
+| Technical / architecture | — | Satoshi or Geist | JetBrains Mono |
+| Strategy / narrative | Instrument Serif | Geist | JetBrains Mono |
+| Creative / editorial | Fraunces | Work Sans | — |
+| Bold / expressive | — | Bricolage Grotesque | — |
 
 **BANNED font: `Inter`** — it signals default AI output. Replace with Satoshi, Cabinet Grotesk, or Geist.
 
@@ -115,6 +175,7 @@ Always: saturation < 80%. Never a pure white or black accent.
 **BANNED colors:**
 
 - `#000000` → use `#09090b`
+- `#0D1117` → GitHub dark / neon-cyber cliché; banned wholesale
 - AI-purple: `#a855f7`, `#818cf8`, `oklch(60% 0.22 270)` or any neon gradient
 - Outer glow `box-shadow: 0 0 20px rgba(...)` → use inset borders instead
 
@@ -177,6 +238,63 @@ section + section { margin-top: clamp(4rem, 8vw, 8rem); }
 ---
 
 ## Motion
+
+**Philosophy: Animation is physics, not timing curves.** Every element has weight, inertia, and friction. The question easing answers is: "how heavy is this object?"
+
+### Slow-Fast-Boom-Stop Narrative (5 beats)
+
+Every animated canvas should breathe at this rhythm:
+
+| Beat | % of runtime | Tempo | Purpose |
+|------|-------------|-------|---------|
+| S1 Trigger | ~15% | Slow | Give humans reaction time, establish reality |
+| S2 Reveal | ~15% | Medium | The visual "wow" moment arrives |
+| S3 Process | ~40% | Fast | Depth / density / detail |
+| S4 Boom | ~20% | Climax | Pull back / multi-panel surge / zoom out |
+| S5 Hold | ~10% | Still | Cut sharp — **never fade to black** |
+
+**Forbidden:** uniform density (no peaks → no memory), fade-out endings.
+
+### Easing Map
+
+```js
+// 1. Expo Out — primary easing (most elements)
+// CSS: cubic-bezier(0.16, 1, 0.3, 1)
+// Use: card rise, panel enter, terminal fade, focus overlay
+
+// 2. Overshoot — toggle / button spring
+// CSS: cubic-bezier(0.34, 1.56, 0.64, 1)
+// Use: toggle switches, button pop, emphasis interactions
+
+// 3. Spring — geometric / physical settling
+// CSS: cubic-bezier(0.175, 0.885, 0.32, 1.275)
+// Use: modal settle, drag-release, position snap
+
+// 4. EaseInOut — continuous motion (cursor trails, looping)
+// CSS: cubic-bezier(0.45, 0, 0.55, 1)
+```
+
+**`linear` is BANNED** — it makes elements feel like numbers, not objects.
+
+### Show Process, Not Magic
+
+- ❌ One-click → perfect result
+- ✅ Show the tweak, show the diff, show the build-up
+
+This is the single biggest differentiator between AI slop and Anthropic-level animation. "Magic" erodes trust; process builds it.
+
+### Focus Transition (depth pull)
+
+```css
+/* Non-focused elements — don't just dim, also blur */
+.unfocused {
+  filter: brightness(0.5) saturate(0.7) blur(4px);
+  opacity: 0.4;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+```
+
+Blur is required. Opacity alone leaves elements visually "sharp" — they don't recede.
 
 **Rule: animate only GPU-composited properties.**
 
@@ -308,7 +426,13 @@ The LLM will reach for these instinctively. Resist all of them.
 |---------|-----------|-----------------|
 | `Inter` font | Default AI signal | `Satoshi`, `Cabinet Grotesk`, `Geist` |
 | `#000000` black | Flat, dead | `#09090b` (zinc-950) |
+| `#0D1117` neon-cyber dark | GitHub/sci-fi cliché | Zinc-950 `#09090b` + warm tint |
+| Pure white `#FFFFFF` bg | No paper feel | `#fafafa` (zinc-50) or warm `#f8f5f0` |
 | Purple/neon gradient | AI aesthetic cliché | Neutral base + one muted accent |
+| `linear` easing | Feels like a number, not an object | `cubic-bezier(0.16, 1, 0.3, 1)` (expoOut) |
+| Fade-to-black / fade-out ending | Anticlimactic, no decision | Cut sharp — hold on the last frame |
+| Step-based animation (fade, fade, fade) | PowerPoint thinking | Scene-based with Slow-Fast-Boom-Stop |
+| Magic one-click results | Erodes trust | Show process: diffs, tweaks, build-up |
 | Outer `box-shadow` glow | Looks cheap | Inset border + tinted shadow |
 | Centered hero + centered body | Symmetry bias | Split-screen, left-aligned |
 | 3 equal horizontal cards | Feature-row slop | Asymmetric grid or zig-zag |
@@ -316,6 +440,109 @@ The LLM will reach for these instinctively. Resist all of them.
 | Round numbers in data | Fake | Organic messy values: `47.2%`, `3,841` |
 | `John Doe`, `Acme Corp` | Placeholder slop | Invent specific, realistic names |
 | Oversized H1 screaming | No hierarchy | Control via weight + color contrast |
+| Generic AI cliché icons (brain, lightbulb, rocket) | No substance | Abstract geometry or typography-as-image |
+
+---
+
+## Cinematic Canvas Patterns
+
+For workflow demos and animated decision flows. Distilled from Anthropic-level motion design.
+
+### Dashboard + Cinematic Overlay (dual-layer)
+
+Default state: full static dashboard (always visible).
+Triggered state: cinematic overlay (22 seconds), then auto-returns.
+
+```html
+<!-- Structure -->
+<div class="dash"><!-- static workflow diagram --></div>
+<div class="cinema"><!-- animated overlay --></div>
+<button class="play-cta">▶</button>
+```
+
+```css
+.cinema { opacity: 0; pointer-events: none; transition: opacity 0.4s; }
+.cinema.show { opacity: 1; pointer-events: auto; }
+```
+
+```js
+playBtn.onclick = () => {
+  cinema.classList.add('show');
+  dash.classList.add('hide');
+  runAnimation(() => endCinematic()); // 22s then reverse
+};
+```
+
+**Banned:** default = black screen with big ▶ button covering everything.
+
+### Scene-based Timeline (not step-based)
+
+5 scenes, ~22 seconds total. Each scene is a full-screen focus on ONE thing:
+
+| Scene | Type | Length | Purpose |
+|-------|------|--------|---------|
+| 1 | Invoke | 3–4s | User trigger (typewriter terminal) |
+| 2 | Process | 5–6s | Core work visualized (unique per topic) |
+| 3 | Insight | 4–5s | Key artifact crystallizes |
+| 4 | Output | 3–4s | Concrete result / diff / metric |
+| 5 | Hero Reveal | 4–5s | Big moment + sharp cut |
+
+**22 seconds is the golden length.** < 18s: PM hasn't settled in. > 25s: attention gone.
+
+Use a single `requestAnimationFrame(render)` loop with a global timeline object. No `setTimeout` chains.
+
+```js
+const T = { DURATION: 22.0, s1_in: 0, s2_in: 3.8, s3_in: 9.6, s4_in: 14.2, s5_in: 18.0 };
+function render(ts) {
+  const t = Math.min((ts - startTs) / 1000, T.DURATION);
+  // interpolate all scene opacities/transforms from T.*
+  if (t < T.DURATION) requestAnimationFrame(render);
+  else endCinematic();
+}
+```
+
+### Cross-fade Scene Transitions (no blank frames)
+
+```js
+// ❌ Wrong: gap between scenes
+if (t >= 9) hideScene2();       // scene 2 fades out
+if (t >= 9.5) showScene3();     // 0.5s blank screen
+
+// ✅ Right: overlapping cross-fade
+if (t >= 8.6) hideScene2();     // start fade-out early
+if (t >= 8.6) showScene3();     // start fade-in simultaneously
+```
+
+### Each Demo Needs a Unique Visual Language
+
+If two canvases look identical under different text, the design has failed. Cover the text — can you tell them apart?
+
+---
+
+## Animation Pitfalls
+
+Bugs that cost a full debugging round. Know them before you write the first line.
+
+**1. `position: relative` is mandatory for absolute children**
+```css
+/* Any container with position:absolute children MUST have: */
+.container { position: relative; } /* even if no offset needed */
+```
+
+**2. Data-driven grid templates**
+```js
+// Don't hardcode column count when N comes from data
+el.style.setProperty('--cols', items.length);
+```
+```css
+.grid { grid-template-columns: repeat(var(--cols), 1fr); }
+```
+
+**3. No rare Unicode in animations**
+Avoid `␣ ↩ ⌘ ⌥ ⇧ ␦` — most fonts don't have these glyphs. Use CSS-constructed boxes instead.
+
+**4. Pure Render: animation state must be seekable**
+Build animations as pure functions of time `t`. Avoid one-shot `fireOnce()` or `setTimeout` chains — they can't be replayed or seeked.
 
 ---
 

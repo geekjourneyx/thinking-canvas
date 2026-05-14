@@ -1,6 +1,6 @@
 ---
 name: thinking-canvas
-description: Use when the user needs to visualize in-flight thinking — design exploration, architecture sketching, comparing approaches, mapping concepts, or any moment when showing beats describing. Creates a live, browser-based HTML/SVG canvas with instant reload. Trigger when the user says "draw", "visualize", "show me", "diagram", "canvas", "sketch", "compare visually", or when a conversation grows abstract and a visual would unblock it. Also trigger proactively when brainstorming, idea-refine, or planning reaches a decision point that a visual would clarify.
+description: Use when the user needs to visualize in-flight thinking — design exploration, architecture sketching, comparing approaches, mapping concepts, or any moment when showing beats describing. Creates a live, browser-based HTML/SVG canvas with instant reload. Trigger when the user says "draw", "visualize", "show me", "diagram", "canvas", "sketch", "compare visually", "画", "可视化", "图", "流程图", "架构图", "思维导图", or when a conversation grows abstract and a visual would unblock it. Also trigger proactively when brainstorming, idea-refine, or planning reaches a decision point that a visual would clarify.
 ---
 
 # thinking-canvas
@@ -39,10 +39,12 @@ Server exits automatically after 30 minutes idle. No stop command needed.
 
 Each turn that needs a canvas update:
 
-1. **Decide** — not every turn warrants a redraw
-2. **Write** — overwrite `$TOPIC_DIR/visual.html` with the complete HTML document
-3. **Render** — `node <skill-path>/scripts/canvas.cjs render --topic <topic>`
-4. **Tell** — on first render: give the user the URL; on subsequent: describe what changed
+1. **Check Node** — verify `node` is available (`node --version`); if not, tell the user and stop
+2. **Read context** — scan current directory for `theme.ts`, `colors.css`, `_variables.scss`, or any brand tokens. If found, lift exact hex/px values into the HTML. If none exist, use `references/design-system.md` defaults.
+3. **Decide** — choose the visual form: mindmap / dependency graph / decision tree / flowchart / state machine / sequence diagram / architecture stack / bento grid / comparison matrix / timeline / custom. When in doubt: show both a static overview *and* an animated highlight of the key insight.
+4. **Write** — overwrite `$TOPIC_DIR/visual.html` with the complete HTML document (self-contained, inline CSS/JS, CDN fonts in `<head>`)
+5. **Render** — `node <skill-path>/scripts/canvas.cjs render --topic <topic>`
+6. **Tell** — on first render: give the URL + what visual form you chose; on subsequent: describe only what changed
 
 **HTML must be self-contained.** Inline all CSS (`<style>`) and JS (`<script>`). Load fonts or CDN libs in `<head>`. The disk file is the shareable artifact — the server injects the live-reload script at serve time, never on disk.
 
