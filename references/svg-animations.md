@@ -29,7 +29,7 @@ SVGs use a coordinate system defined by `viewBox="minX minY width height"`. The 
 
 ### The `<path>` Element — The Power Tool
 
-The `d` attribute defines a path using commands. UppercasP1+r4632=1B5B32347E\P0+r\P0+r\P1+r6B62=7F\P0+r\P1+r6B44=1B5B337E\P1+r6B68=1B4F48\P1+r4037=1B4F46\P1+r6B50=1B5B357E\P1+r6B4E=1B5B367E\e = absolute, lowercase = relative.
+The `d` attribute defines a path using commands. Uppercase = absolute, lowercase = relative.
 
 | Command | Purpose | Syntax |
 |---------|---------|--------|
