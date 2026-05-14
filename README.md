@@ -105,9 +105,11 @@ Canvas output is written to `$(pwd)/docs/brainstorm/<slug>/visual.html` in the a
 
 ---
 
-## About
+## 关于作者
 
 | | |
 |:---|:---|
+| 个人主页 | [jieni.ai](https://jieni.ai) |
 | GitHub | [geekjourneyx](https://github.com/geekjourneyx) |
-| Repository | [geekjourneyx/thinking-canvas](https://github.com/geekjourneyx/thinking-canvas) |
+| Twitter | [@seekjourney](https://x.com/seekjourney) |
+| 公众号 | 微信搜「极客杰尼」 |
