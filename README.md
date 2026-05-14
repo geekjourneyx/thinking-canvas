@@ -42,14 +42,8 @@ Output: http://localhost:52341  →  opens in browser, live-updates as AI refine
 
 ## Install as a Skill
 
-Clone or copy this directory into your Copilot CLI skills folder:
-
 ```bash
-# Copilot CLI
-cp -r thinking-canvas ~/.copilot/installed-plugins/superpowers-marketplace/superpowers/skills/
-
-# Claude Code
-cp -r thinking-canvas ~/.claude/skills/
+npx skills add https://github.com/geekjourneyx/thinking-canvas
 ```
 
 No `npm install` required. The server (`scripts/canvas.cjs`) uses only Node built-ins.
@@ -80,7 +74,7 @@ The server exits automatically after 30 minutes idle. No stop command needed.
 
 ## Design System
 
-Every generated canvas applies `references/design-system.md` — absorbed from taste-skill, huashu-design, and svg-animations best practices:
+Every generated canvas applies `references/design-system.md` — first-principles design DNA covering typography, motion, color, and cinematic animation patterns:
 
 - **Typography:** Satoshi · Cabinet Grotesk · Instrument Serif + Geist pairings. `Inter` banned.
 - **Color:** Zinc neutral base · one accent max · `#0D1117` neon-cyber dark banned
